@@ -6,6 +6,6 @@ class CategoriesController extends Controller
 {
     public function view()
     {
-        echo 'CategoriesController view';
+        $this->renderer->view('category.tpl');
     }
 }

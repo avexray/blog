@@ -6,6 +6,6 @@ class PostsController extends Controller
 {
     public function view()
     {
-        echo 'PostsController view';
+        $this->renderer->view('post.tpl');
     }
 }

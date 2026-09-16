@@ -6,6 +6,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        echo 'HomeController index';
+        $this->renderer->view('index.tpl');
     }
 }

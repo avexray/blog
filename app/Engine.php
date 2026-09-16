@@ -2,18 +2,19 @@
 
 namespace App;
 
+use App\Renderers\SmartyRenderer;
 use App\Controllers\{
     CategoriesController,
     HomeController,
     PostsController
 };
 
-class Engine
+readonly class Engine
 {
     /**
      * @var Route[]
      */
-    private readonly array $routes;
+    private array $routes;
 
     public function __construct()
     {
@@ -29,10 +30,18 @@ class Engine
         $route = $this->findRoute();
 
         if ($route) {
-            $route->invoke();
+            $this->generateResponse($route);
         } else {
             echo '404';
         }
+    }
+
+    private function generateResponse(Route $route): void
+    {
+        $controllerName = $route->getController();
+        $functionName = $route->getFunction();
+
+        (new $controllerName(new SmartyRenderer()))->$functionName();
     }
 
     private function findRoute(): Route|null
