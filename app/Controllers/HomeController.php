@@ -7,13 +7,9 @@ use App\Renderers\Renderer;
 
 class HomeController extends Controller
 {
-    private readonly CategoriesRepository $categoriesRepository;
-
-    public function __construct(Renderer $renderer)
+    public function __construct(Renderer $renderer, private readonly CategoriesRepository $categoriesRepository)
     {
         parent::__construct($renderer);
-
-        $this->categoriesRepository = new CategoriesRepository();
     }
 
     public function index()

@@ -9,17 +9,15 @@ use App\Renderers\Renderer;
 
 class CategoriesController extends Controller
 {
-    private readonly PostsRepository $postsRepository;
-    private readonly CategoriesRepository $categoriesRepository;
-
     const POSTS_PER_PAGE = 5;
 
-    public function __construct(Renderer $renderer)
+    public function __construct(
+        Renderer $renderer,
+        private readonly PostsRepository $postsRepository,
+        private readonly CategoriesRepository $categoriesRepository
+    )
     {
         parent::__construct($renderer);
-
-        $this->postsRepository = new PostsRepository();
-        $this->categoriesRepository = new CategoriesRepository();
     }
 
     /**

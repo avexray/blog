@@ -8,12 +8,12 @@ use App\Renderers\Renderer;
 
 class PostsController extends Controller
 {
-    private readonly PostsRepository $postsRepository;
-
-    public function __construct(Renderer $renderer)
+    public function __construct(
+        Renderer $renderer,
+        private readonly PostsRepository $postsRepository
+    )
     {
         parent::__construct($renderer);
-        $this->postsRepository = new PostsRepository();
     }
 
     public function view()

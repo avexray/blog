@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Exceptions\HttpNotFoundException;
-use App\Renderers\SmartyRenderer;
 use App\Controllers\{CategoriesController, ErrorController, HomeController, PostsController};
 
 readonly class Engine
@@ -13,7 +12,7 @@ readonly class Engine
      */
     private array $routes;
 
-    public function __construct()
+    public function __construct(private readonly ServiceContainer $container)
     {
         $this->routes = [
             new Route('/', 'GET', HomeController::class, 'index'),
@@ -34,7 +33,7 @@ readonly class Engine
             }
         }
         catch (\Exception $e) {
-            $errorController = new ErrorController(new SmartyRenderer());
+            $errorController = $this->container->get(ErrorController::class);
 
             $message = $e->getMessage();
             $code = $e->getCode();
@@ -52,7 +51,8 @@ readonly class Engine
         $controllerName = $route->getController();
         $functionName = $route->getFunction();
 
-        (new $controllerName(new SmartyRenderer()))->$functionName();
+        $controller = $this->container->get($controllerName);
+        $controller->$functionName();
     }
 
     private function findRoute(): Route|null
