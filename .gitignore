@@ -1,3 +1,5 @@
 /.idea
 /vendor
 .env
+/public/style.css
+/public/adminer.php

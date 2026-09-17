@@ -1,9 +1,10 @@
 {
   "require": {
-    "php": "8.4",
+    "php": "^8.4",
     "ext-pdo": "*",
     "vlucas/phpdotenv": "^5.7",
-    "smarty/smarty": "^5.8"
+    "smarty/smarty": "^5.8",
+    "scssphp/scssphp": "^2.1.0"
   },
   "autoload": {
     "psr-4": {

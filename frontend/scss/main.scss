@@ -1,0 +1,41 @@
+@import 'reset.scss';
+@import 'post.scss';
+@import 'category.scss';
+
+/* custom styles */
+
+* {
+  font-family: sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+.header, .footer {
+  background: #5a88f6;
+  color: #ffffff;
+}
+
+.header-link {
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+
+
+

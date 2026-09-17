@@ -1,0 +1,45 @@
+.post {
+  margin-bottom: 30px;
+}
+
+.post__views {
+  font-size: 10px;
+  color: #838383;
+}
+
+.post__content {
+  color: #323232;
+  margin: 5px 0;
+}
+
+.post__date {
+  font-size: 14px;
+  color: #737171;
+}
+
+.post-category {
+  font-weight: 900;
+  border-radius: 15px;
+  padding: 3px 5px;
+  font-size: 12px;
+  color: #fff;
+  background: #de4949;
+  text-decoration: none;
+}
+
+.post-recommendations {
+  display: flex;
+  gap: 10px;
+
+  .post-summary__title {
+    font-size: 14px;
+  }
+
+  .post-summary__content {
+    font-size: 12px;
+  }
+
+  .post-summary__date {
+    font-size: 10px;
+  }
+}
