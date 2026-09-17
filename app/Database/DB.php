@@ -36,9 +36,15 @@ class DB
         return self::$_instance;
     }
 
-    public function query($sql): mixed
+    public function query($sql, $params = null): array
     {
-        $statement = $this->pdo->query($sql);
+        if ($params) {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($params);
+        } else {
+            $statement = $this->pdo->query($sql);
+        }
+
         return $statement->fetchAll();
     }
 
