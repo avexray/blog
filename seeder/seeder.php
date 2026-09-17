@@ -7,6 +7,9 @@ use App\Database\DB;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
+const MIN_CATEGORIES_PER_PAGE = 3;
+const MAX_CATEGORIES_PER_PAGE = 10;
+
 function seedCategories(): void
 {
     $categories = include 'categories.php';
@@ -35,8 +38,12 @@ function seedPosts(): void
         $content = $post['content'];
         $description = substr($content, 0, 100) . '...';
         $createdAt = randDate();
+        $viewCount = random_int(0, 100);
 
-        if (DB::instance()->execute("insert into posts (title, description, content, created_at) values ('$title', '$description', '$content', '$createdAt')")) {
+        if (DB::instance()->execute("
+            insert into posts (title, description, content, view_count, created_at) 
+            values ('$title', '$description', '$content', '$viewCount', '$createdAt')"
+        )) {
             $count++;
         }
     }
@@ -79,17 +86,18 @@ function seedPostCategories(): void
 
 function pickRandomCategories($categoryIds): array
 {
-    $count = random_int(1, 3);
+    $count = random_int(MIN_CATEGORIES_PER_PAGE, MAX_CATEGORIES_PER_PAGE);
     $selectedIds = [];
 
-    for ($i = 0; $i < $count; $i++) {
-        do {
-            $randIndex = random_int(0, count($categoryIds) - 1);
-            $randCategoryId = $categoryIds[$randIndex];
-        } while (array_key_exists($randCategoryId, $selectedIds));
+    while (count($selectedIds) < $count) {
+        $randIndex = random_int(0, count($categoryIds) - 1);
+        $randCategoryId = $categoryIds[$randIndex];
 
-        $selectedIds[] = $randCategoryId;
+        if (!in_array($randCategoryId, $selectedIds)) {
+            $selectedIds[] = $randCategoryId;
+        }
     }
+
     return $selectedIds;
 }
 

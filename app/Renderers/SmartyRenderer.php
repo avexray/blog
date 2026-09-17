@@ -17,7 +17,7 @@ readonly class SmartyRenderer implements Renderer
         $this->smarty->setCacheDir(__DIR__ . '/../../runtime/cache/');
     }
 
-    public function view(string $template, ...$args): void
+    public function view(string $template, $args): void
     {
         foreach ($args as $key => $value) {
             $this->smarty->assign($key, $value);
