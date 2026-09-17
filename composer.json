@@ -1,5 +1,7 @@
 {
   "require": {
+    "php": "8.4",
+    "ext-pdo": "*",
     "vlucas/phpdotenv": "^5.7",
     "smarty/smarty": "^5.8"
   },

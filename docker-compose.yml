@@ -1,6 +1,6 @@
 services:
   mariadb:
-    image: mariadb:10.3
+    build: docker/mariadb
     container_name: blog-mariadb
     working_dir: /application
     volumes:
@@ -8,7 +8,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=blog
-      - MYSQL_USER=blogger
     ports:
       - "3306:3306"
 
