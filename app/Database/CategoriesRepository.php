@@ -26,18 +26,20 @@ class CategoriesRepository
 
     public function getCategoriesWithLatestPosts(): array
     {
-        $results = DB::instance()->query('
-            select categories.id as category_id, categories.title as category_title,
-                   posts.id as post_id, posts.title as post_title,
-                   posts.description as post_description,
-                   posts.view_count as view_count,
-                   posts.created_at as post_created_at
-            from categories
-            inner join post_categories pcj on categories.id = pcj.category_id
-            inner join posts on posts.id = pcj.post_id order by created_at desc
-        ');
+        $query = '
+        select * from (
+            select pc.category_id, c.title as category_title, p.id as post_id, p.title, p.description, p.view_count, p.created_at,
+            row_number() over (
+            partition by pc.category_id
+            order by created_at desc, p.id desc
+            ) as row_num
+        from post_categories as pc
+        inner join posts as p on pc.post_id = p.id
+        inner join categories as c on pc.category_id = c.id
+        ) as ranked where row_num <= 3;
+        ';
 
-        $categories = [];
+        $results = DB::instance()->query($query);
 
         foreach ($results as $result) {
             $categoryId = $result['category_id'];
@@ -49,20 +51,20 @@ class CategoriesRepository
                     'posts' => [
                         [
                             'id' => $result['post_id'],
-                            'title' => $result['post_title'],
-                            'description' => $result['post_description'],
+                            'title' => $result['title'],
+                            'description' => $result['description'],
                             'view_count' => $result['view_count'],
-                            'created_at' => $result['post_created_at']
+                            'created_at' => $result['created_at']
                         ]
                     ]
                 ];
             } else {
                 $categories[$categoryId]['posts'][] = [
                     'id' => $result['post_id'],
-                    'title' => $result['post_title'],
-                    'description' => $result['post_description'],
+                    'title' => $result['title'],
+                    'description' => $result['description'],
                     'view_count' => $result['view_count'],
-                    'created_at' => $result['post_created_at']
+                    'created_at' => $result['created_at']
                 ];
             }
         }
