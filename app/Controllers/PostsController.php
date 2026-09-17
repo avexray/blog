@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Database\PostsRepository;
+use App\Exceptions\HttpNotFoundException;
 use App\Renderers\Renderer;
 
 class PostsController extends Controller
@@ -19,7 +20,15 @@ class PostsController extends Controller
     {
         $postId = $_GET['id'];
 
+        if (!$postId) {
+            throw new HttpNotFoundException();
+        }
+
         $post = $this->postsRepository->getPost($postId);
+
+        if (empty($post)) {
+            throw new HttpNotFoundException();
+        }
         $recommendedPosts = $this->postsRepository->getPostRecommendations($postId);
 
         $this->renderer->view('post.tpl', [

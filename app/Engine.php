@@ -2,12 +2,9 @@
 
 namespace App;
 
+use App\Exceptions\HttpNotFoundException;
 use App\Renderers\SmartyRenderer;
-use App\Controllers\{
-    CategoriesController,
-    HomeController,
-    PostsController
-};
+use App\Controllers\{CategoriesController, ErrorController, HomeController, PostsController};
 
 readonly class Engine
 {
@@ -29,10 +26,24 @@ readonly class Engine
     {
         $route = $this->findRoute();
 
-        if ($route) {
-            $this->generateResponse($route);
-        } else {
-            echo '404';
+        try {
+            if ($route) {
+                $this->generateResponse($route);
+            } else {
+                throw new HttpNotFoundException();
+            }
+        }
+        catch (\Exception $e) {
+            $errorController = new ErrorController(new SmartyRenderer());
+
+            $message = $e->getMessage();
+            $code = $e->getCode();
+
+            if ($e instanceof \PDOException) {
+                $message = 'Database Connection Error';
+                $code = 500;
+            }
+            $errorController->error($message, $code);
         }
     }
 

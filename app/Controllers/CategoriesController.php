@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Database\CategoriesRepository;
 use App\Database\PostsRepository;
+use App\Exceptions\HttpNotFoundException;
 use App\Renderers\Renderer;
 
 class CategoriesController extends Controller
@@ -21,18 +22,27 @@ class CategoriesController extends Controller
         $this->categoriesRepository = new CategoriesRepository();
     }
 
+    /**
+     * @throws HttpNotFoundException
+     */
     public function view()
     {
         $categoryId = (int) ($_GET['id'] ?? 0);
-        $orderBy = $_GET['order'] ?? 'created_at';
-        $page = max(1, (int)($_GET['page'] ?? 1));
+
 
         $category = $this->categoriesRepository->getCategory($categoryId);
+
+        if (!$category) {
+            throw new HttpNotFoundException();
+        }
+
+        $orderBy = $_GET['order'] ?? 'created_at';
+        $page = max(1, (int)($_GET['page'] ?? 1));
 
         $pagesCount = (int)ceil($category['post_count'] / self::POSTS_PER_PAGE);
 
         if ($page > $pagesCount && $pagesCount > 0) {
-            throw new \Exception('Page not found');
+            throw new HttpNotFoundException();
         }
 
         $offset = ($page - 1) * self::POSTS_PER_PAGE;
